@@ -5,9 +5,9 @@ const Hero = () => {
     <div class="hero min-h-[90vh] bg-base-200">
       <div class="hero-content text-center">
         <div class="max-w-md">
-          <h1 class="text-8xl font-bold font-exo">
+          <h1 class=" text-6xl md:text-8xl font-bold font-exo">
             T
-            <span className="inline-block border-[10px] border-primary w-[1.5em] h-[.75em] rounded-full"></span>
+            <span className="inline-block border-[10px] md:border-[15px] border-primary w-[1.5em] h-[.74em] rounded-full"></span>
             DOO
           </h1>
           <p class="py-6">Todo app with double the O's</p>
