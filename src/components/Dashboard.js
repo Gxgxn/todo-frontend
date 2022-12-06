@@ -12,6 +12,8 @@ const Dashboard = () => {
   const [todoList, setTodoList] = useState([]);
   const [taskList, setTaskList] = useState([]);
   const [currentTodoId, setCurrentTodoId] = useState("");
+  const [newValue, setNewValue] = useState("");
+
   const BASE_URL = `http://localhost:4000`;
   //fetch Function
   async function fetchData() {
@@ -108,6 +110,20 @@ const Dashboard = () => {
     setTaskList(res.data.todo.tasks);
   }
 
+  //changing task name
+  async function editTask(taskId, e) {
+    console.log(taskId);
+    if (!newValue) {
+      return alert("please enter a valid title");
+    }
+    let res = await axios.put(
+      `${BASE_URL}/api/updatetask/${currentTodoId}/${taskId}`,
+      {
+        task: newValue,
+      }
+    );
+    setTaskList(res.data.todo.tasks);
+  }
   return (
     <div className="container mx-auto grid bg-base-300 min-h-[90vh] md:grid-cols-[minmax(400px,_1fr)_3fr] p-5 gap-2">
       <div>
@@ -178,11 +194,13 @@ const Dashboard = () => {
                   key={index}
                   tasks={taskList}
                   title={task.task}
-                  currentTodo={currentTodoId}
-                  url={BASE_URL}
+                  taskId={task._id}
+                  setNewValue={setNewValue}
+                  newValue={newValue}
                   isDone={task.isDone}
                   handleIsDone={() => handleIsDone(task._id, task.isDone)}
                   delete={() => deleteTaskHandler(task._id)}
+                  edit={editTask}
                 />
               );
             })}
