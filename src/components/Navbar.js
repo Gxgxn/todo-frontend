@@ -23,11 +23,11 @@ const Navbar = () => {
           data-choose-theme
           className="select select-ghost w-full max-w-[8rem]"
         >
-          <option disabled defaultValue selected>
+          <option disabled defaultValue>
             Select a theme
           </option>
           <option value="dark">Dark</option>
-          <option value="pastel">Pastel</option>
+          <option value="cmyk">Light</option>
           <option value="coffee">Coffee</option>
         </select>
       </div>

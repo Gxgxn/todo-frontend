@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Task from "./Task";
-import { IoAddCircleOutline, IoTrashBinOutline } from "react-icons/io5";
+import {
+  IoAddCircleOutline,
+  IoTrashBinOutline,
+  IoSearch,
+} from "react-icons/io5";
 const Dashboard = () => {
   const [todo, setTodo] = useState("");
+  const [task, setTask] = useState("");
   const [todoList, setTodoList] = useState([]);
   const [taskList, setTaskList] = useState([]);
   const [currentTodoId, setCurrentTodoId] = useState("");
@@ -29,6 +34,9 @@ const Dashboard = () => {
         if (task.id !== id) return task;
       })
     );
+    if (id === currentTodoId) {
+      setTaskList("");
+    }
   }
   //intial fetch
   useEffect(() => {
@@ -49,10 +57,23 @@ const Dashboard = () => {
     ]);
     setTodo("");
   }
+
+  // Task Add Function
+  async function handleTaskSubmit(event) {
+    event.preventDefault();
+    const data = {
+      text: task,
+    };
+    const res = await axios.put(
+      `${BASE_URL}/api/createtask/${currentTodoId}`,
+      data
+    );
+    setTaskList(res.data.tasks);
+    setTask("");
+  }
   //fetch tasks for an TodoId
   async function fetchTasks(todoId) {
     let res = await axios.get(`${BASE_URL}/api/gettodo/${todoId}`);
-    console.log(res);
     setTaskList(res.data.tasks);
   }
 
@@ -68,12 +89,25 @@ const Dashboard = () => {
       `${BASE_URL}/api/deletetask/${currentTodoId}/${taskId}`
     );
     setTaskList((prevList) => {
-      console.log(prevList);
       return prevList.filter((task) => {
         if (task._id !== taskId) return task;
       });
     });
   }
+
+  //updating isDone Task
+  async function handleIsDone(taskId, isDone) {
+    const currentValue = isDone;
+    let res = await axios.put(
+      `${BASE_URL}/api/toggle/${currentTodoId}/${taskId}`,
+      {
+        isDone: currentValue,
+      }
+    );
+    console.log(taskId, isDone);
+    setTaskList(res.data.todo.tasks);
+  }
+
   return (
     <div className="container mx-auto grid bg-base-300 min-h-[90vh] md:grid-cols-[minmax(400px,_1fr)_3fr] p-5 gap-2">
       <div>
@@ -81,7 +115,7 @@ const Dashboard = () => {
           <div className="inline-flex w-full">
             <input
               type="text"
-              placeholder="Type here"
+              placeholder="Add A TODO"
               className="input input-bordered w-full max-w-xs"
               value={todo}
               onChange={(event) => setTodo(event.target.value)}
@@ -116,20 +150,43 @@ const Dashboard = () => {
             ))}
         </div>
       </div>
-      <div className="flex justify-evenly items-start flex-wrap max-h-[90vh] overflow-y-auto gap-3 p-4">
-        {taskList &&
-          taskList.map((task, index) => {
-            return (
-              <Task
-                key={index}
-                tasks={taskList}
-                title={task.task}
-                currentTodo={currentTodoId}
-                url={BASE_URL}
-                delete={() => deleteTaskHandler(task._id)}
-              />
-            );
-          })}
+      <div>
+        {taskList && currentTodoId && (
+          <div className="flex justify-end">
+            <form onSubmit={handleTaskSubmit}>
+              <div className="inline-flex ">
+                <input
+                  type="text"
+                  placeholder="Add a Task..."
+                  className="input input-bordered w-full max-w-xs"
+                  value={task}
+                  onChange={(event) => setTask(event.target.value)}
+                />
+                <button className="btn btn-accent text-2xl ml-auto ">
+                  <IoAddCircleOutline />
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        <div className="flex justify-evenly items-start flex-wrap max-h-[90vh] overflow-y-auto gap-3 p-4">
+          {taskList &&
+            taskList.map((task, index) => {
+              return (
+                <Task
+                  key={index}
+                  tasks={taskList}
+                  title={task.task}
+                  currentTodo={currentTodoId}
+                  url={BASE_URL}
+                  isDone={task.isDone}
+                  handleIsDone={() => handleIsDone(task._id, task.isDone)}
+                  delete={() => deleteTaskHandler(task._id)}
+                />
+              );
+            })}
+        </div>
       </div>
     </div>
   );
