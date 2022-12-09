@@ -13,7 +13,7 @@ const Dashboard = () => {
   const [newValue, setNewValue] = useState("");
   //Backend URL
 
-  const BASE_URL = `http://localhost:4000`;
+  const BASE_URL = `https://todo-backend-.up.railway.app`;
   //get user id
   async function getUserID() {
     try {
@@ -27,16 +27,14 @@ const Dashboard = () => {
   //fetch Function For Todos
   async function fetchData() {
     const userId = await getUserID();
-    console.log(userId);
     let res = await axios.get(`${BASE_URL}/api/getalltodo/${userId}`);
     const todoArray = [];
-    console.log(res);
+
     res.data.forEach((todo) => {
       todoArray.push({ title: todo.title, id: todo._id });
       // console.log(todo);
     });
     setTodoList(todoArray);
-    console.log("userId is" + "  " + userId);
   }
 
   //delete todo function
@@ -119,13 +117,11 @@ const Dashboard = () => {
         isDone: currentValue,
       }
     );
-    console.log(taskId, isDone);
     setTaskList(res.data.todo.tasks);
   }
 
   //changing task name
   async function editTask(taskId, e) {
-    console.log(taskId);
     if (!newValue) {
       return alert("please enter a valid title");
     }
