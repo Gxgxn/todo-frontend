@@ -1,11 +1,12 @@
 import { Client, Account } from "appwrite";
 
 const client = new Client()
-  .setEndpoint("https://[HOSTNAME_OR_IP]/v1") // Your API Endpoint
-  .setProject("5df5acd0d48c2"); // Your project ID
+  .setEndpoint("http://localhost/v1") // Your API Endpoint
+  .setProject("638822683b538327a25f"); // Your project ID
 
-export const account = new Account(client);
+const account = new Account(client);
 
+export default account;
 // const promise = account.create(ID.unique(), "team@appwrite.io", "password");
 
 // promise.then(

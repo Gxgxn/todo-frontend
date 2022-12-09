@@ -1,28 +1,34 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
 import account from "../../appwrite/config";
+import { ID } from "appwrite";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-const Login = (props) => {
-  const navigate = useNavigate();
 
+const Register = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState({
     email: "",
     password: "",
+    name: "",
   });
-  function login(e) {
+  function signup(e) {
     e.preventDefault();
-    const promise = account.createEmailSession(user.email, user.password);
+    if (!user.email || !user.email) {
+      return alert("Must Enter Both Email And Password");
+    }
+    const promise = account.create(
+      ID.unique(),
+      user.email,
+      user.password,
+      user.name
+    );
     promise.then(
       function (response) {
         console.log(response);
-        props.setIsLoggedIn(true);
-        navigate("/dashboard");
+        navigate("/login");
       },
       function (error) {
         console.log(error);
-        alert(error.message);
-        setUser({ email: "", password: "" });
       }
     );
   }
@@ -36,22 +42,29 @@ const Login = (props) => {
     });
     console.log(user);
   }
+
   return (
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content flex-col lg:flex-row-reverse">
         <div className="text-center lg:text-left">
-          <h1 className="text-5xl font-bold">Login!</h1>
-          <p className="py-6">
-            Login in to continue ,<br /> if you don't have a account go ahead
-            create an account{" "}
-            <Link className="link link-info" to="/signup">
-              {" "}
-              Sign Up
-            </Link>
-          </p>
+          <h1 className="text-5xl font-bold">Register</h1>
+          <p className="py-6"> Fill Info to Register</p>
         </div>
         <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
           <div className="card-body">
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Name</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Name"
+                className="input input-bordered"
+                name="name"
+                value={user.name}
+                onChange={formHandler}
+              />
+            </div>
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Email</span>
@@ -79,8 +92,8 @@ const Login = (props) => {
               />
             </div>
             <div className="form-control mt-6">
-              <button className="btn btn-primary" onClick={login}>
-                Login
+              <button className="btn btn-primary" onClick={signup}>
+                Register
               </button>
             </div>
           </div>
@@ -90,4 +103,4 @@ const Login = (props) => {
   );
 };
 
-export default Login;
+export default Register;

@@ -1,12 +1,30 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useContext } from "react";
 import { themeChange } from "theme-change";
+import account from "../appwrite/config";
+import { useState } from "react";
 
-const Navbar = () => {
+const Navbar = (props) => {
+  const [isLoggedIn, setIsLoggedIn] = useState("");
+  const navigate = useNavigate();
   useEffect(() => {
     themeChange(false);
   }, []);
+
+  async function logout() {
+    try {
+      await account.deleteSession("current");
+      props.setIsLoggedIn(false);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  // async function checkAuth() {
+  //   const check = await account.get();
+  //   check ? setIsLoggedIn(true) : setIsLoggedIn(false);
+  // }
   return (
     <div className="navbar bg-neutral text-neutral-content flex justify-between">
       {/* <a className="btn btn-ghost normal-case text-xl">TOODOO</a> */}
@@ -16,7 +34,7 @@ const Navbar = () => {
         DOO
       </Link>
       <div
-        class="tooltip tooltip-secondary tooltip-bottom"
+        className="tooltip tooltip-secondary tooltip-bottom"
         data-tip="Theme Selector"
       >
         <select
@@ -31,6 +49,11 @@ const Navbar = () => {
           <option value="coffee">Coffee</option>
         </select>
       </div>
+      {props.loggedIn && (
+        <button className=" btn btn-secondary btn-sm" onClick={logout}>
+          Logout
+        </button>
+      )}
     </div>
   );
 };

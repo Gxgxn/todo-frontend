@@ -10,5 +10,5 @@ module.exports = {
       exo: ["eudoxus", "sans-serif"],
     },
   },
-  plugins: [require("daisyui")],
+  plugins: [require("daisyui"), require("tailwindcss-no-scrollbar")],
 };

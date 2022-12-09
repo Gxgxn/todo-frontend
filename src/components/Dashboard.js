@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import Task from "./Task";
-import {
-  IoAddCircleOutline,
-  IoTrashBinOutline,
-  IoSearch,
-} from "react-icons/io5";
+import { IoAddCircleOutline, IoTrashBinOutline } from "react-icons/io5";
+import account from "../appwrite/config";
+
 const Dashboard = () => {
   const [todo, setTodo] = useState("");
   const [task, setTask] = useState("");
@@ -13,18 +11,32 @@ const Dashboard = () => {
   const [taskList, setTaskList] = useState([]);
   const [currentTodoId, setCurrentTodoId] = useState("");
   const [newValue, setNewValue] = useState("");
+  //Backend URL
 
   const BASE_URL = `http://localhost:4000`;
-  //fetch Function
+  //get user id
+  async function getUserID() {
+    try {
+      const promise = await account.get();
+      if (!promise) throw new Error("something went wrong");
+      return promise.$id;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  //fetch Function For Todos
   async function fetchData() {
-    let res = await axios.get(`${BASE_URL}/api/getalltodo`);
+    const userId = await getUserID();
+    console.log(userId);
+    let res = await axios.get(`${BASE_URL}/api/getalltodo/${userId}`);
     const todoArray = [];
-    // console.log(res);
+    console.log(res);
     res.data.forEach((todo) => {
       todoArray.push({ title: todo.title, id: todo._id });
       // console.log(todo);
     });
     setTodoList(todoArray);
+    console.log("userId is" + "  " + userId);
   }
 
   //delete todo function
@@ -48,9 +60,10 @@ const Dashboard = () => {
   //Todo Title Submit Handler
   async function handleSubmit(event) {
     event.preventDefault();
+    const userId = await getUserID();
     const data = {
       title: todo,
-      id: "112323dd232",
+      id: userId,
     };
     const res = await axios.post(`${BASE_URL}/api/createtodo`, data);
     setTodoList((prevList) => [
@@ -123,6 +136,7 @@ const Dashboard = () => {
       }
     );
     setTaskList(res.data.todo.tasks);
+    setNewValue("");
   }
   return (
     <div className="container mx-auto grid bg-base-300 min-h-[90vh] md:grid-cols-[minmax(400px,_1fr)_3fr] p-5 gap-2">
@@ -141,16 +155,16 @@ const Dashboard = () => {
             </button>
           </div>
         </form>
-        <div className="overflow-y-auto max-h-[75vh]">
+        <div className="overflow-y-auto max-h-[75vh] scroll-pt-6 snap-y scrollbar-none">
           {todoList &&
             todoList.map((todo, index) => (
               <h4
                 key={index}
                 id={todo.id}
                 onClick={() => todoClickHandler(todo.id)}
-                className={`text-center bg-base-200 text-base-content rounded-lg p-2 my-2 cursor-pointer hover:bg-neutral-focus hover:text-content relative ${
+                className={`text-center bg-base-200 text-base-content rounded-lg p-2 my-2 cursor-pointer hover:bg-secondary-content hover:text-content relative ${
                   currentTodoId === todo.id
-                    ? "bg-secondary-focus hover:bg-secondary-focus"
+                    ? "bg-secondary-focus hover:!bg-secondary-focus"
                     : ""
                 }`}
               >
@@ -186,7 +200,7 @@ const Dashboard = () => {
           </div>
         )}
 
-        <div className="flex justify-evenly items-start flex-wrap max-h-[90vh] overflow-y-auto gap-3 p-4">
+        <div className="flex justify-evenly items-start flex-wrap max-h-[90vh] overflow-y-auto gap-3 p-4 scrollbar-none">
           {taskList &&
             taskList.map((task, index) => {
               return (

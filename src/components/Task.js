@@ -29,7 +29,9 @@ const Task = (props) => {
             />
             <button
               className="btn btn-secondary"
-              onClick={() => (props.edit(props.taskId), setEditing(false))}
+              onClick={() => {
+                return props.edit(props.taskId), setEditing(false);
+              }}
             >
               submit
             </button>
