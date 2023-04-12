@@ -34,7 +34,6 @@ const Login = (props) => {
         [e.target.name]: e.target.value,
       };
     });
-    console.log(user);
   }
   return (
     <div className="hero min-h-screen bg-base-200">
