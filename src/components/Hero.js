@@ -2,10 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 const Hero = (props) => {
   return (
-    <div class="hero min-h-[90vh] bg-base-200">
-      <div class="hero-content text-center">
-        <div class="max-w-md">
-          <h1 class=" text-6xl md:text-8xl font-bold font-exo">
+    <div className="hero min-h-[90vh] bg-base-200">
+      <div className="hero-content text-center">
+        <div className="max-w-md">
+          <h1 className=" text-6xl md:text-8xl font-bold font-exo">
             T
             <span className="inline-block border-[10px] md:border-[15px] border-primary w-[1.5em] h-[.74em] rounded-full"></span>
             DOO

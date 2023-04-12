@@ -3,10 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useContext } from "react";
 import { themeChange } from "theme-change";
 import account from "../appwrite/config";
-import { useState } from "react";
 
 const Navbar = (props) => {
-  const [isLoggedIn, setIsLoggedIn] = useState("");
   const navigate = useNavigate();
   useEffect(() => {
     themeChange(false);
@@ -21,10 +19,7 @@ const Navbar = (props) => {
       console.log(error);
     }
   }
-  // async function checkAuth() {
-  //   const check = await account.get();
-  //   check ? setIsLoggedIn(true) : setIsLoggedIn(false);
-  // }
+
   return (
     <div className="navbar bg-neutral text-neutral-content flex justify-between">
       {/* <a className="btn btn-ghost normal-case text-xl">TOODOO</a> */}
