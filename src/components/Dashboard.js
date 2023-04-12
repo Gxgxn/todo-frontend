@@ -13,7 +13,7 @@ const Dashboard = () => {
   const [newValue, setNewValue] = useState("");
   //Backend URL
 
-  const BASE_URL = `https://todo-backend-.up.railway.app`;
+  const BASE_URL = `https://todo-backend-api.up.railway.app↗`;
   //get user id
   async function getUserID() {
     try {
