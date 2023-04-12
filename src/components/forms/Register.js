@@ -24,11 +24,11 @@ const Register = () => {
     );
     promise.then(
       function (response) {
-        console.log(response);
+        console.log("User Signed Up", response);
         navigate("/login");
       },
       function (error) {
-        console.log(error);
+        console.log(error.message);
       }
     );
   }
@@ -82,7 +82,7 @@ const Register = () => {
                 <span className="label-text">Password</span>
               </label>
               <input
-                type="text"
+                type="password"
                 placeholder="password"
                 className="input input-bordered"
                 name="password"
